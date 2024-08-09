@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <el-input class="input-style" v-model="input" placeholder="请输入内容"></el-input>
     <el-button type="primary" @click="searchUser">
       <i class="el-icon-search"></i>
