@@ -1,10 +1,7 @@
 <template>
   <div>
-    <el-input
-      class="input-style"
-      v-model="input"
-      placeholder="请输入内容"
-    ></el-input>
+
+    <el-input class="input-style" v-model="input" placeholder="请输入内容"></el-input>
     <el-button type="primary" @click="searchUser">
       <i class="el-icon-search"></i>
       查询
@@ -14,11 +11,9 @@
       <el-button class="add" type="primary" @click="addVisible = true">
         添加
       </el-button>
-      <el-button type="danger" @click="MultiDel" :disabled="isDisabled"
-        >批量删除</el-button
-      >
+      <el-button type="danger" @click="MultiDel" :disabled="isDisabled">批量删除</el-button>
     </div>
-    
+
 
     <!-- 添加用户 -->
     <el-dialog title="添加用户" :visible.sync="addVisible" width="30%">
@@ -36,10 +31,7 @@
           <span>用户昵称</span>
         </div>
         <div>
-          <el-input
-            v-model="addInputNickName"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input v-model="addInputNickName" placeholder="请输入内容"></el-input>
         </div>
       </div>
 
@@ -50,71 +42,41 @@
     </el-dialog>
 
     <!-- 设置表格 -->
-    <el-table
-      ref="multipleTable"
-      :data="tableDataList"
-      border
-      tooltip-effect="dark"
-      style="width: 100%"
-      header-align="center"
-      @selection-change="handleSelectionChange"
-    >
-    
+    <el-table ref="multipleTable" :data="tableDataList" border tooltip-effect="dark" style="width: 100%"
+      header-align="center" @selection-change="handleSelectionChange">
+
       <el-table-column type="selection"> </el-table-column>
       <el-table-column prop="userId" label="序号" align="center" width="100px"> </el-table-column>
-      <el-table-column prop="userName" label="用户名" align="center" > </el-table-column>
-      <el-table-column
-        prop="userNickName"
-        label="用户昵称"
-        align="center"
-        show-overflow-tooltip
-      >
+      <el-table-column prop="userName" label="用户名" align="center"> </el-table-column>
+      <el-table-column prop="userNickName" label="用户昵称" align="center" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column
-        prop="permissionList"
-        label="权限列表"
-        align="center"
-        show-overflow-tooltip
-      >
+      <el-table-column prop="permissionList" label="权限列表" align="center" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="createDate" label="创建日期" align="center"> </el-table-column>
       <el-table-column prop="upDate" label="更新日期" align="center"> </el-table-column>
       <el-table-column prop="operations" label="操作" align="center">
         <template slot-scope="data">
-          <el-button
-            class="opera"
-            type="info"
-            @click="
-              showInfo(
-                data.row.userName,
-                data.row.userId,
-                data.row.permissionList
-              )
-            "
-          >
+          <el-button class="opera" type="info" @click="
+            showInfo(
+              data.row.userName,
+              data.row.userId,
+              data.row.permissionList
+            )
+            ">
             <i class="el-icon-user"></i>
           </el-button>
-          <el-button
-            class="opera"
-            type="primary"
-            @click="
-              showEditInfo(
-                data.row.userName,
-                data.row.userNickName,
-                data.row.userId
-              )
-            "
-          >
+          <el-button class="opera" type="primary" @click="
+            showEditInfo(
+              data.row.userName,
+              data.row.userNickName,
+              data.row.userId
+            )
+            ">
             <i class="el-icon-edit"></i>
           </el-button>
           <!--   删除当前行 -->
-          <el-popconfirm
-            title="确定删除该用户吗？"
-            @confirm="delUser(data.row.userId)"
-          >
-            <el-button class="opera" type="danger" slot="reference"
-              ><i class="el-icon-delete"></i
-            ></el-button>
+          <el-popconfirm title="确定删除该用户吗？" @confirm="delUser(data.row.userId)">
+            <el-button class="opera" type="danger" slot="reference"><i class="el-icon-delete"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -122,48 +84,23 @@
 
     <!-- 分页 -->
     <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pageData"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="this.tableData.length"
-        @prev-click="handleCurrentChange"
-        @next-click="handleCurrentChange"
-      >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]" :page-size="pageData" layout="total, sizes, prev, pager, next, jumper"
+        :total="this.tableData.length" @prev-click="handleCurrentChange" @next-click="handleCurrentChange">
       </el-pagination>
     </div>
 
     <!-- 设置角色 -->
-    <el-dialog
-      title="设置角色"
-      :visible.sync="dialogVisible"
-      width="30%"
-      @close="handlClose"
-      :close-on-click-modal="false"
-    >
+    <el-dialog title="设置角色" :visible.sync="dialogVisible" width="30%" @close="handlClose" :close-on-click-modal="false">
       <span>用户名</span>
-      <el-input
-        v-model="inputUserName"
-        placeholder="当前用户的用户名"
-        :disabled="true"
-      ></el-input>
+      <el-input v-model="inputUserName" placeholder="当前用户的用户名" :disabled="true"></el-input>
       <div style="margin: 15px 0"></div>
       <span>角色列表</span>
-      <el-checkbox
-        :indeterminate="isIndeterminate"
-        v-model="checkAll"
-        @change="handleCheckAllChange"
-      >
+      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
         全选
       </el-checkbox>
       <div style="margin: 15px 0"></div>
-      <el-checkbox-group
-        v-model="checkedRoles"
-        @change="handleCheckedRolesChange"
-      >
+      <el-checkbox-group v-model="checkedRoles" @change="handleCheckedRolesChange">
         <el-checkbox v-for="role in roles" :label="role" :key="role">
           {{ role }}
         </el-checkbox>
@@ -171,29 +108,18 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改用户 -->
-    <el-dialog
-      title="修改用户"
-      :visible.sync="editVisible"
-      width="30%"
-      @close="handlClose"
-      :close-on-click-modal="false"
-    >
+    <el-dialog title="修改用户" :visible.sync="editVisible" width="30%" @close="handlClose" :close-on-click-modal="false">
       <div class="edit-user">
         <div class="top-user">
           <span>用户名</span>
         </div>
         <div>
-          <el-input
-            v-model="currentUserName"
-            placeholder="当前用户的用户名"
-          ></el-input>
+          <el-input v-model="currentUserName" placeholder="当前用户的用户名"></el-input>
         </div>
       </div>
       <div style="margin: 15px 0"></div>
@@ -202,10 +128,7 @@
           <span>用户昵称</span>
         </div>
         <div>
-          <el-input
-            v-model="currentUserNickName"
-            placeholder="当前用户的用户昵称"
-          ></el-input>
+          <el-input v-model="currentUserNickName" placeholder="当前用户的用户昵称"></el-input>
         </div>
       </div>
 
@@ -390,16 +313,16 @@ export default {
     addUser() {
       this.addVisible = false;
       this.userId = this.tableData.length + 1;
-      
+
       let newUser = {
         userId: this.userId,
         userName: this.addInputName,
         userNickName: this.addInputNickName,
       };
-      
+
       this.tableDataList.push(newUser);
       this.tableData.push(newUser);
-      
+
       /* 
         分页的注意事项：
           - 1.本项目中，是模拟的数据
@@ -507,13 +430,16 @@ export default {
   margin-left: 20px;
   width: 190px;
 }
+
 .el-button {
   margin-left: 10px;
   width: 90px;
 }
+
 .addAndDel {
   margin: 20px;
 }
+
 .add {
   margin-left: 0px;
 }
@@ -526,6 +452,7 @@ export default {
 .edit-user {
   display: flex;
 }
+
 .top-user,
 .bottom-user {
   width: 80px;
